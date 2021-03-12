@@ -1,3 +1,61 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+body {
+    background: lightcyan;
+}
+.custom-header {
+    background: rgb(49, 49, 49);
+    color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15vh;
+    width: 100%;
+}
+.dashboard {
+    display: flex;
+}
+.search-form-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: whitesmoke;
+    color: rgb(20, 20, 20);
+    width: 20%;
+    height: 100vh;
+}
+.custom-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    margin-left: 15px;
+}
+.custom-label {
+    font-size: 20px;
+    font-weight: bolder;
+}
+.weather-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+.current-weather {
+    background: whitesmoke;
+    width: 96%;
+    height: 60vh;
+}
+.forecast{
+    width: 96%;
+    height: 40vh;
+}
 
 
 
