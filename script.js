@@ -1,13 +1,12 @@
 let apiKey = '&appid=cffe501940779b25824bab372a571e3e';
-// let oneCallApi = 'https://api.openweathermap.org/data/2.5/onecall?';
 let currentApi = 'https://api.openweathermap.org/data/2.5/weather?q=';
 let searchContainer = $('.search-form-container');
 let currentWeatherContainer = $('.current-weather');
-let fiveDayForecast = $('.forecast');
+let fiveDayForecastContainer = $('.forecast');
 let searchBtn = $('.custom-button');
 let search = $('.custom-input');
 
-// fetch function to retrieve api data
+// fetch functions to retrieve api data
 function getCurrentApi(requestUrl) {
     fetch(requestUrl)
         .then(function (response) {
@@ -17,41 +16,50 @@ function getCurrentApi(requestUrl) {
             displayCurrentWeather(data);
         });
 }
-function get5dayApi(requestUrl) {
-    fetch(requestUrl)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            display5dayForecast(data);
-        });
+function getUvi(lat, lng) {
+    let excludeHourly = '&exclude=hourly,minutely'
+    let oneCallApi = 'https://api.openweathermap.org/data/2.5/onecall?' + lat + lng + excludeHourly + apiKey;
+    fetch(oneCallApi)
+    .then(function(respone){
+        return respone.json();
+    })
+    .then (function(data){
+        display5dayForecast(data);
+    })
+}
+function convertUnixToDate(unixTimestamp){
+    let unixTime = unixTimestamp * 1000;
+    let dateObject = new Date(unixTime);
+    let dateFormat = dateObject.toLocaleString()
+    console.log(dateFormat);
 }
 function displayCurrentWeather(data) {
     console.log(data);
-    console.log(data.name);
+    let cityName = console.log(data.name);
     var iconcode = data.weather[0].icon
     var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
-    console.log(iconurl);
-    console.log('temp: ' + convertKelvin(data.main.temp));
-    console.log('himidity ' + data.main.humidity + '%');
-    console.log('Wind speed ' + data.wind.speed + 'mph');
+    let temp = console.log('Temperature: ' + convertKelvin(data.main.temp));
+    let humidity = console.log('Humidity: ' + data.main.humidity + '%');
+    let windSpeed = console.log('Wind speed: ' + data.wind.speed + ' MPH');
+    let lat = 'lat=' + data.coord.lat;
+    let lng = '&lon=' + data.coord.lon;
+    getUvi(lat, lng);
 
-
-    localStorage.setItem('Name', data.name)
+    // localStorage.setItem('Name', data.name)
 
 }
 function display5dayForecast(data){
     console.log(data);
-
+    let uviIndex = data.current.uvi;
+    console.log(uviIndex);
+    convertUnixToDate(data.daily[0].dt);
 }
 //function to save search 
 searchBtn.on('click', function (event) {
     event.preventDefault();
     console.log('button clicked')
     let city = $('.custom-input').val();
-    // let finalForecastApi = forecastApi + city + apiKey;
     let finalCurrentWeather = currentApi + city + apiKey;
-    // oneCallApi(finalForecastApi);
     getCurrentApi(finalCurrentWeather);
 })
 function convertKelvin(kelvin){
