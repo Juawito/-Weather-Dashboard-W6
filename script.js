@@ -16,7 +16,7 @@ function getCurrentApi(requestUrl) {
             displayCurrentWeather(data);
         });
 }
-function getUvi(lat, lng) {
+function getForecast(lat, lng) {
     let excludeHourly = '&exclude=hourly,minutely'
     let oneCallApi = 'https://api.openweathermap.org/data/2.5/onecall?' + lat + lng + excludeHourly + apiKey;
     fetch(oneCallApi)
@@ -31,19 +31,28 @@ function convertUnixToDate(unixTimestamp){
     let unixTime = unixTimestamp * 1000;
     let dateObject = new Date(unixTime);
     let dateFormat = dateObject.toLocaleString()
-    console.log(dateFormat);
+    return dateFormat
+} 
+function renderIcon(iconUrl){
+   return $('<img>').attr('src=', iconUrl);
 }
+  
 function displayCurrentWeather(data) {
     console.log(data);
-    let cityName = console.log(data.name);
+    let cityName = data.name;
+    let date = convertUnixToDate(data.dt);
+    let currentDate = date.split(' ');
     var iconcode = data.weather[0].icon
     var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
-    let temp = console.log('Temperature: ' + convertKelvin(data.main.temp));
-    let humidity = console.log('Humidity: ' + data.main.humidity + '%');
-    let windSpeed = console.log('Wind speed: ' + data.wind.speed + ' MPH');
+    let temp = 'Temperature: ' + convertKelvin(data.main.temp);
+    let humidity = 'Humidity: ' + data.main.humidity + '%';
+    let windSpeed = 'Wind speed: ' + data.wind.speed + ' MPH';
     let lat = 'lat=' + data.coord.lat;
     let lng = '&lon=' + data.coord.lon;
-    getUvi(lat, lng);
+    getForecast(lat, lng);
+    let cityTitle = $('<h2>');
+    cityTitle.text(cityName +' (' + currentDate[0] + ')' + renderIcon(iconurl));
+    currentWeatherContainer.append(cityTitle);
 
     // localStorage.setItem('Name', data.name)
 
@@ -54,7 +63,7 @@ function display5dayForecast(data){
     console.log(uviIndex);
     convertUnixToDate(data.daily[0].dt);
 }
-//function to save search 
+//function to save search input
 searchBtn.on('click', function (event) {
     event.preventDefault();
     console.log('button clicked')
