@@ -71,9 +71,12 @@ function displayWeather(data) {
 }
 function displayForecast(data) {
     let containerTitle = $('<h3>5-Day Forecast:</h3>');
+    containerTitle.attr('class', 'forecast-title');
     fiveDayForecastContainer.append(containerTitle);
     let forecastArr = data.daily;
-    console.log(forecastArr);
+    let cardsContainer = $('<div>');
+    cardsContainer.attr('class', 'cards-container');
+    fiveDayForecastContainer.append(cardsContainer);
     for (let i = 1; i < 7; i++) {
         //assigning variables to data inside of the objects in the array
         let date = convertUnixToDate(forecastArr[i].dt);
@@ -86,6 +89,7 @@ function displayForecast(data) {
         //creating card to contain the information
         let card = $('<div>');
         card.attr('class', 'card'); 
+        card.addClass ('custom-card');
         let cardDate = $('<h4>');
         cardDate.attr('class', 'card-title');
         let cardIcon = $('<img>');
@@ -104,7 +108,7 @@ function displayForecast(data) {
         card.append(cardIcon);
         card.append(cardTemp);
         card.append(cardHumidity);
-        fiveDayForecastContainer.append(card);
+        cardsContainer.append(card);
     }
 }
 //function to save search input
