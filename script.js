@@ -50,9 +50,9 @@ function displayWeather(data) {
     let date = convertUnixToDate(data.daily[0].dt);
     let dateWithTime = date.split(',');
     let currentDate = ' (' + dateWithTime[0] + ')';
-    var iconcode = data.daily[0].weather[0].icon
-    var iconurl = "http://openweathermap.org/img/wn/" + iconcode + ".png";
-    let temp = 'Temperature: ' + convertKelvin(data.daily[0].temp.day);
+    let iconCode = data.daily[0].weather[0].icon
+    let iconUrl = "http://openweathermap.org/img/wn/" + iconCode + ".png";
+    let temp = 'Temperature: ' + convertKelvin(data.daily[0].temp.day) + ' ºF';
     let humidity = 'Humidity: ' + data.daily[0].humidity + '%';
     let windSpeed = 'Wind speed: ' + data.daily[0].wind_speed + ' MPH';
     let uviIndex = data.daily[0].uvi;
@@ -64,21 +64,47 @@ function displayWeather(data) {
         ul.append(weatherInfo);
     }
     currentTitle.append(currentDate);
-    currentTitle.append("<img src='" + iconurl + "'/>");
+    currentTitle.append("<img src='" + iconUrl + "'/>");
     currentWeatherContainer.append(currentTitle);
     currentWeatherContainer.append(ul);
     displayForecast(data);
 }
 function displayForecast(data) {
-    let containerTitle = $('<h2>5-Day Forecast:</h2>');
+    let containerTitle = $('<h3>5-Day Forecast:</h3>');
+    fiveDayForecastContainer.append(containerTitle);
     let forecastArr = data.daily;
     console.log(forecastArr);
     for (let i = 1; i < 7; i++) {
-        let date = convertUnixToDate(data.daily[i].dt);
+        //assigning variables to data inside of the objects in the array
+        let date = convertUnixToDate(forecastArr[i].dt);
         let dateWithTime = date.split(',');
-        let currentDate = ' (' + dateWithTime[0] + ')';
-        var iconcode = data.daily[0].weather[0].icon
-        var iconurl = "http://openweathermap.org/img/wn/" + iconcode + ".png";
+        let currentDate = dateWithTime[0];
+        let iconCode = forecastArr[i].weather[0].icon
+        let iconUrl = "http://openweathermap.org/img/wn/" + iconCode + ".png";
+        let temp = 'Temp: ' + convertKelvin(forecastArr[i].temp.day) + ' ºF';
+        let humidity = 'Humidity: ' + forecastArr[i].humidity + '%';
+        //creating card to contain the information
+        let card = $('<div>');
+        card.attr('class', 'card'); 
+        let cardDate = $('<h4>');
+        cardDate.attr('class', 'card-title');
+        let cardIcon = $('<img>');
+        cardIcon.attr('class', 'card-icon');
+        cardIcon.attr('src', iconUrl);
+        let cardTemp = $('<p>');
+        cardTemp.attr('class', 'card-text');
+        let cardHumidity= $('<p>');
+        cardHumidity.attr('class', 'card-text');
+        //adding the data to the card 
+        cardDate.text(currentDate);
+        cardTemp.text(temp);
+        cardHumidity.text(humidity);
+        //appending elements to card and card to page
+        card.append(cardDate);
+        card.append(cardIcon);
+        card.append(cardTemp);
+        card.append(cardHumidity);
+        fiveDayForecastContainer.append(card);
     }
 }
 //function to save search input
