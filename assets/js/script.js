@@ -16,7 +16,7 @@ function getCurrentApi(requestUrl) {
         .then(function (data) {
             getLatAndlon(data);
         });
-}
+};
 function getWeatherData(lat, lng) {
     let excludeHourly = '&exclude=hourly,minutely'
     let oneCallApi = 'https://api.openweathermap.org/data/2.5/onecall?' + lat + lng + excludeHourly + apiKey;
@@ -27,13 +27,13 @@ function getWeatherData(lat, lng) {
         .then(function (data) {
             displayWeather(data);
         })
-}
+};
 function convertUnixToDate(unixTimestamp) {
     let unixTime = unixTimestamp * 1000;
     let dateObject = new Date(unixTime);
     let dateFormat = dateObject.toLocaleString()
     return dateFormat
-}
+};
 function getLatAndlon(data) {
     console.log(data);
     let cityName = data.name;
@@ -44,7 +44,7 @@ function getLatAndlon(data) {
 
     // localStorage.setItem('Name', data.name)
 
-}
+};
 function displayWeather(data) {
     console.log(data);
     let date = convertUnixToDate(data.daily[0].dt);
@@ -62,13 +62,13 @@ function displayWeather(data) {
         let weatherInfo = $('<li>');
         weatherInfo.text(currentInfoArr[i]);
         ul.append(weatherInfo);
-    }
+    };
     currentTitle.append(currentDate);
     currentTitle.append("<img src='" + iconUrl + "'/>");
     currentWeatherContainer.append(currentTitle);
     currentWeatherContainer.append(ul);
     displayForecast(data);
-}
+};
 function displayForecast(data) {
     let containerTitle = $('<h3>5-Day Forecast:</h3>');
     containerTitle.attr('class', 'forecast-title');
@@ -88,8 +88,8 @@ function displayForecast(data) {
         let humidity = 'Humidity: ' + forecastArr[i].humidity + '%';
         //creating card to contain the information
         let card = $('<div>');
-        card.attr('class', 'card'); 
-        card.addClass ('custom-card');
+        card.attr('class', 'card');
+        card.addClass('custom-card');
         let cardDate = $('<h4>');
         cardDate.attr('class', 'card-title');
         let cardIcon = $('<img>');
@@ -97,7 +97,7 @@ function displayForecast(data) {
         cardIcon.attr('src', iconUrl);
         let cardTemp = $('<p>');
         cardTemp.attr('class', 'card-text');
-        let cardHumidity= $('<p>');
+        let cardHumidity = $('<p>');
         cardHumidity.attr('class', 'card-text');
         //adding the data to the card 
         cardDate.text(currentDate);
@@ -109,19 +109,57 @@ function displayForecast(data) {
         card.append(cardTemp);
         card.append(cardHumidity);
         cardsContainer.append(card);
-    }
-}
+    };
+};
 //function to save search input
 searchBtn.on('click', function (event) {
     event.preventDefault();
+    // currentWeatherContainer.html('');
     let city = $('.custom-input').val();
+    $('.custom-input').val('');
+    savePreviousSearch(city);
     let finalCurrentWeather = currentApi + city + apiKey;
     getCurrentApi(finalCurrentWeather);
+    renderPreviousSearch();
 })
 function convertKelvin(kelvin) {
     let results = (kelvin - 273.15) * 9 / 5 + 32;
     return results.toFixed(0);
+};
+function savePreviousSearch(city) {
+    // if statement not working trying to fix it
+    if (city.indexOf(' ') >= 0) {
+        let cityString = city.split(' ');
+        let capitalizedCityArr = [];
+        for (let i = 0; i < cityString.length; i++) {
+            let splitString = cityString[i].charAt(0).toUpperCase() + cityString[1].slice(1) + ' ';
+            capitalizedCityArr.push(splitString);
+        };
+        let capitalizedCityString = capitalizedCityArr.join('');
+        let savedCitys = JSON.parse(localStorage.getItem('SavedCitys')) || [];
+        savedCitys.push(capitalizedCityString);
+        localStorage.setItem('SavedCitys', JSON.stringify(savedCitys));
+    } else {
+        let capitalizedStr = city.charAt(0).toUpperCase() + city.slice(1);
+        let savedCitys = JSON.parse(localStorage.getItem('SavedCitys')) || [];
+        savedCitys.push(capitalizedStr);
+        localStorage.setItem('SavedCitys', JSON.stringify(savedCitys));
+    }
 }
-function previousSearch() {
-    //to render search history
-}
+function renderPreviousSearch() {
+    let table = $('<table>').attr('class', 'table');
+    let savedCitys = JSON.parse(localStorage.getItem('SavedCitys'));
+    if (savedCitys.length === null || savedCitys.length === undefined) {
+        return
+    } else {
+        for (let i = 0; i <= savedCitys.length; i++) {
+            let tableRow = $('<tr>')
+            let tableData = $('<td>');
+            tableData.text(savedCitys[i]);
+            tableRow.append(tableData);
+            table.append(tableRow);
+        }
+        searchContainer.append(table);
+    }
+};
+renderPreviousSearch();
