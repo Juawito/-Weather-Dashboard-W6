@@ -1,13 +1,12 @@
 const apiKey = '&appid=cffe501940779b25824bab372a571e3e';
 const currentApi = 'https://api.openweathermap.org/data/2.5/weather?q=';
-const searchContainer = $('.search-form-container');
+const searchContainer = $('.saved-search-table');
 const currentWeatherContainer = $('.current-weather');
 const fiveDayForecastContainer = $('.forecast');
 const searchBtn = $('.custom-button');
 const search = $('.custom-input');
 const currentTitle = $(".current-weather-title");
 
-// fetch functions to retrieve api data
 function getCurrentApi(requestUrl) {
     fetch(requestUrl)
         .then(function (response) {
@@ -37,6 +36,7 @@ function convertUnixToDate(unixTimestamp) {
 function getLatAndlon(data) {
     console.log(data);
     let cityName = data.name;
+    currentTitle.empty();
     currentTitle.append(cityName);
     let lat = 'lat=' + data.coord.lat;
     let lng = '&lon=' + data.coord.lon;
@@ -63,6 +63,7 @@ function displayWeather(data) {
         weatherInfo.text(currentInfoArr[i]);
         ul.append(weatherInfo);
     };
+    currentWeatherContainer.empty();
     currentTitle.append(currentDate);
     currentTitle.append("<img src='" + iconUrl + "'/>");
     currentWeatherContainer.append(currentTitle);
@@ -72,6 +73,7 @@ function displayWeather(data) {
 function displayForecast(data) {
     let containerTitle = $('<h3>5-Day Forecast:</h3>');
     containerTitle.attr('class', 'forecast-title');
+    fiveDayForecastContainer.empty();
     fiveDayForecastContainer.append(containerTitle);
     let forecastArr = data.daily;
     let cardsContainer = $('<div>');
@@ -111,10 +113,8 @@ function displayForecast(data) {
         cardsContainer.append(card);
     };
 };
-//function to save search input
 searchBtn.on('click', function (event) {
     event.preventDefault();
-    // currentWeatherContainer.html('');
     let city = $('.custom-input').val();
     $('.custom-input').val('');
     savePreviousSearch(city);
@@ -127,12 +127,11 @@ function convertKelvin(kelvin) {
     return results.toFixed(0);
 };
 function savePreviousSearch(city) {
-    // if statement not working trying to fix it
     if (city.indexOf(' ') >= 0) {
         let cityString = city.split(' ');
         let capitalizedCityArr = [];
         for (let i = 0; i < cityString.length; i++) {
-            let splitString = cityString[i].charAt(0).toUpperCase() + cityString[1].slice(1) + ' ';
+            let splitString = cityString[i].charAt(0).toUpperCase() + cityString[i].slice(1) + ' ';
             capitalizedCityArr.push(splitString);
         };
         let capitalizedCityString = capitalizedCityArr.join('');
@@ -147,19 +146,30 @@ function savePreviousSearch(city) {
     }
 }
 function renderPreviousSearch() {
-    let table = $('<table>').attr('class', 'table');
     let savedCitys = JSON.parse(localStorage.getItem('SavedCitys'));
     if (savedCitys.length === null || savedCitys.length === undefined) {
         return
     } else {
-        for (let i = 0; i <= savedCitys.length; i++) {
-            let tableRow = $('<tr>')
+        let table = $('<table>').attr('class', 'table');
+        for (let i = 0; i < savedCitys.length; i++) {
+            let tableRow = $('<tr>');
             let tableData = $('<td>');
-            tableData.text(savedCitys[i]);
+            let button = $('<button>');
+            button.addClass('btn btn-secondary history-buttons');
+            button.text(savedCitys[i]);
+            tableData.append(button);
             tableRow.append(tableData);
             table.append(tableRow);
         }
+        searchContainer.empty();
         searchContainer.append(table);
-    }
+    };
 };
 renderPreviousSearch();
+$('.history-buttons').on('click', function(event){
+    event.preventDefault();
+    let city = ($(this).text());
+    let finalCurrentWeather = currentApi + city + apiKey;
+    getCurrentApi(finalCurrentWeather);
+
+});
