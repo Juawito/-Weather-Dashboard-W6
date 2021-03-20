@@ -37,4 +37,20 @@ THEN I am again presented with current and future conditions for that city
     3. Container for the 5 day forecast.  
 - I then added bootstrap classes to style them to look presentable.  
 - After I started on the javascript functions.  
-    1. 
+    1. The first step was to make an on click function to save the users input to retrieve data from the api.   
+    2. Created two functions to retrieve the data that I needed for the weather  
+    from both of the API's that I used. 
+    3. I used the first API to retrieve the latitude and longitude from a city name so that I could pass  
+    it to the next function to retrieve all of the neccessary information as well as the  
+    forecast information.  
+    4. I then started to create functions that would allow me to render the information into the correct containers on the page.  
+    5. The final step was to save the previous search inputs and display them and also make them clickable.  
+
+## Deployed Application  
+
+[Weather Dashboard](https://juawito.github.io/-Weather-Dashboard-W6/)  
+  
+  
+
+![Image of weather dashboard](assets/images/dashboard-img.png 'Weather Dashboard')
+
