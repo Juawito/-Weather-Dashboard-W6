@@ -55,7 +55,9 @@ function displayWeather(data) {
     let temp = 'Temperature: ' + convertKelvin(data.daily[0].temp.day) + ' ºF';
     let humidity = 'Humidity: ' + data.daily[0].humidity + '%';
     let windSpeed = 'Wind speed: ' + data.daily[0].wind_speed + ' MPH';
-    let uviIndex = data.daily[0].uvi;
+    // trying to create a span anround the uvi nunmber from the api data
+    let uvi = data.daily[0].uvi;
+    let uviIndex = 'UV Index: ' + $(`<span> ${JSON.stringify(uvi)} </span>`);
     let ul = $('<ul>');
     let currentInfoArr = [temp, humidity, windSpeed, uviIndex];
     for (let i = 0; i < currentInfoArr.length; i++) {
@@ -77,7 +79,7 @@ function displayForecast(data) {
     fiveDayForecastContainer.append(containerTitle);
     let forecastArr = data.daily;
     let cardsContainer = $('<div>');
-    cardsContainer.attr('class', 'cards-container');
+    cardsContainer.attr('class', 'card-group');
     fiveDayForecastContainer.append(cardsContainer);
     for (let i = 1; i < 7; i++) {
         //assigning variables to data inside of the objects in the array
@@ -147,10 +149,11 @@ function savePreviousSearch(city) {
 }
 function renderPreviousSearch() {
     let savedCitys = JSON.parse(localStorage.getItem('SavedCitys'));
-    if (savedCitys.length === null || savedCitys.length === undefined) {
+    if (savedCitys === null || savedCitys === undefined) {
+        $('.saved-search-table').empty();
         return
     } else {
-        let table = $('<table>').attr('class', 'table');
+        let table = $('<table>').attr('class', 'table table-responsive');
         for (let i = 0; i < savedCitys.length; i++) {
             let tableRow = $('<tr>');
             let tableData = $('<td>');
@@ -165,6 +168,12 @@ function renderPreviousSearch() {
         searchContainer.append(table);
     };
 };
+$('.clearBtn').on('click', function(event){
+    event.preventDefault();
+    console.log('button clicked');
+    localStorage.clear();
+    renderPreviousSearch();
+});
 renderPreviousSearch();
 $('.history-buttons').on('click', function(event){
     event.preventDefault();

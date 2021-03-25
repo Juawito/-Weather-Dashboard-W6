@@ -12,21 +12,22 @@
 </head>
 
 <body>
-    <h1 class="display04 custom-header">Weather Dashboard</h1>
-    <div class="dashboard">
-        <aside class="search-form-container">
+    <h1 class="display04 d-xl-flex custom-header">Weather Dashboard</h1>
+    <div class="container dashboard">
+        <aside class=" form-group search-form-container">
             <form class="form-inline custom-form">
                 <label for="citySearchForm" class="custom-label">Search for a City:</label>
                 <input class="form-control mr-sm-2 custom-input" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0 custom-button" type="submit">Search</button>
+                <button type="button" class="btn btn-outline-info clearBtn">Clear Search History</button>
             </form>
-            <div class="saved-search-table"></div>
+            <div class="container d-flex justify-content-center saved-search-table"></div>
         </aside>
-        <div class="weather-container">
+        <div class="container weather-container">
             <div class="current-weather">
-                <h2 class="current-weather-title"></h2>
+                <h2 class=" h2 current-weather-title"></h2>
             </div>
-            <div class="forecast"></div>
+            <div class="container forecast"></div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

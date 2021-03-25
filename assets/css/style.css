@@ -48,9 +48,17 @@ body {
     align-items: center;
 }
 .current-weather {
-    background: lightsalmon;
+    background: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 96%;
     height: 60vh;
+}
+.current-weather ul {
+    list-style: none;
+    line-height: 40px;
 }
 .forecast{
     width: 96%;
@@ -58,19 +66,19 @@ body {
     display: flex;
     flex-direction: column;
 }
-.cards-container {
+/* .cards-container {
     display: flex;
-    height: 90%;
+    align-items: center;
+    height: 80%;
     width: 100%;
-}
-.custom-card {
+} */
+/* .custom-card {
     display: flex;
-    height: 100%;
+    height: 80%;
     width: 15%; 
-    padding: auto;
     flex-direction: column;
     justify-content: space-evenly;
-}
+} */
 
 
 
